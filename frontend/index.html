@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Sistema de Gestión Farmacéutica VITALHEALTH">
+    <title>Gestión de Farmacia - VITALHEALTH</title>
+    <meta name="theme-color" content="#2980b9"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/206/206853.png"> <style>
+      :root {
+        --pharma-blue: #2980b9;
+        --pharma-green: #27ae60;
+        --pharma-light: #ecf0f1;
+        --pharma-dark: #2c3e50;
+        --pharma-red: #e74c3c;
+      }
+      
+      body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f8f9fa;
+      }
+      
+      .pharma-header {
+        background: linear-gradient(135deg, var(--pharma-dark) 0%, var(--pharma-blue) 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-bottom: 4px solid var(--pharma-green);
+      }
+      
+      .pharma-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: white;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+      }
+      
+      .pharma-subtitle {
+        color: rgba(255,255,255,0.9);
+        font-weight: 400;
+      }
+      
+      .pharma-box {
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        border-top: 3px solid var(--pharma-green);
+        transition: transform 0.3s ease;
+      }
+      
+      .pharma-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      }
+      
+      .pharma-button {
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+      
+      .pharma-button.is-primary {
+        background-color: var(--pharma-blue);
+      }
+      
+      .pharma-button.is-success {
+        background-color: var(--pharma-green);
+      }
+      
+      .pharma-button.is-danger {
+        background-color: var(--pharma-red);
+      }
+      
+      .pharma-button.is-warning {
+        background-color: #f39c12;
+      }
+      
+      .pharma-button.is-info {
+        background-color: var(--pharma-dark);
+      }
+      
+      .pharma-card-title {
+        color: var(--pharma-dark);
+        border-left: 4px solid var(--pharma-green);
+        padding-left: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      
+      .pharma-input {
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+      
+      .pharma-input:focus {
+        border-color: var(--pharma-green);
+        box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+      }
+      
+      .pharma-result {
+        background-color: white;
+        border-left: 4px solid var(--pharma-blue);
+      }
+      
+      .pharma-icon {
+        color: var(--pharma-green);
+        margin-right: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="pharma-header">
+      <div class="container">
+        <h1 class="title is-2 pharma-title">VITALHEALTH</h1>
+        <h2 class="subtitle is-4 pharma-subtitle">
+          <i class="fas fa-prescription-bottle-alt"></i> Gestión Farmacéutica Integral
+        </h2>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container">
+        <div class="columns is-multiline">
+          
+          <div class="column is-one-third">
+            <div class="box pharma-box">
+              <h3 class="title is-5 pharma-card-title">
+                <i class="fas fa-pills pharma-icon"></i>Consultar inventario
+              </h3>
+              <button class="button is-info pharma-button is-fullwidth" onclick="getMedicamentos()">
+                <i class="fas fa-search"></i>&nbsp; Ver productos
+              </button>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <div class="box pharma-box">
+              <h3 class="title is-5 pharma-card-title">
+                <i class="fas fa-plus-circle pharma-icon"></i>Nuevo producto
+              </h3>
+              <input class="input pharma-input mb-3" type="text" id="newNombre" placeholder="Nombre del producto">
+              <textarea class="textarea pharma-input mb-3" id="newDescripcion" placeholder="Descripción"></textarea>
+              <input class="input pharma-input mb-3" type="number" id="newCantidad" placeholder="Cantidad" min="0" value="0">
+              <input class="input pharma-input mb-3" type="number" step="0.01" id="newPrecio" placeholder="Precio" min="0" value="0.00">
+              <label class="checkbox">
+                <input type="checkbox" id="newDisponible" checked>
+                <span class="ml-2">Disponible</span>
+              </label>
+              <button class="button is-success pharma-button is-fullwidth mt-3" onclick="addMedicamento()">
+                <i class="fas fa-save"></i>&nbsp; Registrar producto
+              </button>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <div class="box pharma-box">
+              <h3 class="title is-5 pharma-card-title">
+                <i class="fas fa-edit pharma-icon"></i>Modificar producto
+              </h3>
+              <input class="input pharma-input mb-3" type="number" id="modifyId" placeholder="ID del producto">
+              <input class="input pharma-input mb-3" type="text" id="modifyNombre" placeholder="Nuevo nombre">
+              <textarea class="textarea pharma-input mb-3" id="modifyDescripcion" placeholder="Nueva descripción"></textarea>
+              <input class="input pharma-input mb-3" type="number" id="modifyCantidad" placeholder="Nueva cantidad" min="0">
+              <input class="input pharma-input mb-3" type="number" step="0.01" id="modifyPrecio" placeholder="Nuevo precio" min="0">
+               <label class="checkbox">
+                <input type="checkbox" id="modifyDisponible">
+                <span class="ml-2">Disponible</span>
+              </label>
+              <button class="button is-warning pharma-button is-fullwidth mt-3" onclick="updateMedicamento()">
+                <i class="fas fa-sync-alt"></i>&nbsp; Actualizar
+              </button>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <div class="box pharma-box">
+              <h3 class="title is-5 pharma-card-title">
+                <i class="fas fa-trash-alt pharma-icon"></i>Eliminar producto
+              </h3>
+              <input class="input pharma-input mb-3" type="number" id="deleteId" placeholder="ID a eliminar">
+              <button class="button is-danger pharma-button is-fullwidth" onclick="deleteMedicamento()">
+                <i class="fas fa-trash"></i>&nbsp; Retirar producto
+              </button>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <div class="box pharma-box">
+              <h3 class="title is-5 pharma-card-title">
+                <i class="fas fa-file-medical pharma-icon"></i>Registro de actividades
+              </h3>
+              <button class="button is-primary pharma-button is-fullwidth" onclick="getLogs()">
+                <i class="fas fa-clipboard-list"></i>&nbsp; Ver logs
+              </button>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <div class="box pharma-box">
+              <h3 class="title is-5 pharma-card-title">
+                <i class="fas fa-user-md pharma-icon"></i>Registro de usuario
+              </h3>
+              <input class="input pharma-input mb-3" type="text" id="registerUsername" placeholder="Nombre de usuario">
+              <input class="input pharma-input mb-3" type="password" id="registerPassword" placeholder="Contraseña">
+              <div class="select is-fullwidth mb-3">
+                <select id="registerRole" class="pharma-input">
+                  <option value="user">Farmacéutico</option>
+                  <option value="admin">Administrador</option>
+                </select>
+              </div>
+              <button class="button is-dark pharma-button is-fullwidth" onclick="registerUser()">
+                <i class="fas fa-user-plus"></i>&nbsp; Registrar personal
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="box pharma-result">
+          <h3 class="title is-5 pharma-card-title">
+            <i class="fas fa-file-prescription pharma-icon"></i>Respuesta del sistema
+          </h3>
+          <pre id="result" class="has-background-light p-3"></pre>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // **IMPORTANTE**: En un entorno de producción, esta API_KEY no debería estar hardcodeada aquí.
+      // Debería gestionarse de forma segura (ej. obtenida del servidor después de la autenticación).
+      //const API_KEY = '9a17ae85e7c225b6a011e1117e5a9225'; //
+       const API_KEY = 'c2fedc5e4e72a23da78b7444ed5d360d';
+	
+      /**
+       * Función genérica para realizar solicitudes HTTP a la API.
+       * @param {string} method - Método HTTP (GET, POST, PUT, DELETE).
+       * @param {string} url - URL del endpoint.
+       * @param {object} [body=null] - Objeto con los datos a enviar en la solicitud.
+       */
+      async function request(method, url, body = null) {
+        const resultElement = document.getElementById('result');
+        try {
+          const options = {
+            method,
+            headers: {
+              'Content-Type': 'application/json',
+              'X-API-Key': API_KEY // Incluye la clave API en todas las solicitudes
+            }
+          };
+          if (body) options.body = JSON.stringify(body);
+
+          const response = await fetch(url, options);
+          const data = await response.json();
+          resultElement.textContent = JSON.stringify(data, null, 2); // Muestra la respuesta en formato JSON
+        } catch (err) {
+          resultElement.textContent = `Error: ${err.message}`; // Muestra cualquier error
+        }
+      }
+
+      // Funciones para interactuar con los endpoints del backend
+
+      /**
+       * Obtiene y muestra la lista de medicamentos.
+       */
+      const getMedicamentos = () => request('GET', 'http://127.0.0.1:5001/medicamentos');
+
+      /**
+       * Crea un nuevo medicamento.
+       */
+      const addMedicamento = () => {
+        const nombre = document.getElementById('newNombre').value;
+        const descripcion = document.getElementById('newDescripcion').value;
+        const cantidad = parseInt(document.getElementById('newCantidad').value, 10);
+        const precio = parseFloat(document.getElementById('newPrecio').value);
+        const disponible = document.getElementById('newDisponible').checked;
+
+        if (!nombre || !descripcion || isNaN(cantidad) || isNaN(precio)) {
+          return alert('Nombre, descripción, cantidad y precio son requeridos y deben ser válidos.');
+        }
+        if (cantidad < 0 || precio < 0) {
+            return alert('La cantidad y el precio no pueden ser negativos.');
+        }
+
+        request('POST', 'http://127.0.0.1:5001/medicamentos', { nombre, descripcion, cantidad, precio, disponible });
+      };
+
+      /**
+       * Modifica un medicamento existente.
+       */
+      const updateMedicamento = () => {
+        const id = document.getElementById('modifyId').value;
+        const nombre = document.getElementById('modifyNombre').value;
+        const descripcion = document.getElementById('modifyDescripcion').value;
+        const cantidad = parseInt(document.getElementById('modifyCantidad').value, 10);
+        const precio = parseFloat(document.getElementById('modifyPrecio').value);
+        const disponible = document.getElementById('modifyDisponible').checked;
+
+
+        if (!id) {
+            return alert('ID del producto es requerido para modificar.');
+        }
+        if (!nombre && !descripcion && isNaN(cantidad) && isNaN(precio) && typeof disponible !== 'boolean') {
+             return alert('Al menos un campo (nombre, descripción, cantidad, precio o disponible) debe ser proporcionado para la modificación.');
+        }
+        if (cantidad < 0 || precio < 0) {
+            return alert('La cantidad y el precio no pueden ser negativos.');
+        }
+
+        const updateBody = {};
+        if (nombre) updateBody.nombre = nombre;
+        if (descripcion) updateBody.descripcion = descripcion;
+        if (!isNaN(cantidad)) updateBody.cantidad = cantidad;
+        if (!isNaN(precio)) updateBody.precio = precio;
+        updateBody.disponible = disponible; // Siempre enviar el estado de disponible
+
+        request('PUT', `http://127.0.0.1:5001/medicamentos/${id}`, updateBody);
+      };
+
+      /**
+       * Elimina un medicamento.
+       */
+      const deleteMedicamento = () => {
+        const id = document.getElementById('deleteId').value;
+        if (!id) return alert('ID del producto a eliminar es requerido.');
+        request('DELETE', `http://127.0.0.1:5001/medicamentos/${id}`);
+      };
+
+      /**
+       * Obtiene y muestra los logs de auditoría.
+       */
+      const getLogs = () => request('GET', 'http://127.0.0.1:5001/audit-logs');
+
+      /**
+       * Registra un nuevo usuario.
+       */
+      const registerUser = () => {
+        const username = document.getElementById('registerUsername').value;
+        const password = document.getElementById('registerPassword').value;
+        const role = document.getElementById('registerRole').value;
+        if (!username || !password) return alert('Usuario y contraseña requeridos para el registro.');
+        request('POST', 'http://127.0.0.1:5001/register', { username, password, role });
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+# Entorno virtual
+venv/
+.env/
+
+# Archivos de log
+*.log
+
+# Bases de datos locales
+*.db
+
+# Certificados y claves privadas
+*.pem
+
+# Archivos temporales o compilados
+__pycache__/
+*.pyc
+*.pyo
+
+# Archivos de sistema
+.DS_Store
